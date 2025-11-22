@@ -43,6 +43,7 @@ public class GameManager : MonoBehaviour
             {
                 Debug.Log("🎉 ¡Comida completada!");
                 EncenderLuzFinal(); // ← prender la luz final
+                MusicManager.Instance.ReproducirVictoria();
                 juegoTerminado = true;
             }
         }
