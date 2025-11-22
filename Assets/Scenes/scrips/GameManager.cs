@@ -1,3 +1,5 @@
+using UnityEngine.SceneManagement;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,9 +17,43 @@ public class GameManager : MonoBehaviour
     [Header("Luces del orden correcto")]
     public List<GameObject> lucesOrden; // ← tus 8 luces (7 ingredientes + luz final)
 
+    [Header("Escenas de Victoria y Derrota")]
+    public string escenaVictoria;
+    public string escenaDerrota;
+
     [HideInInspector] public bool juegoTerminado = false;
 
     private int indiceActual = 0;
+
+    public void CargarEscenaVictoria(float delay = 1.5f)
+    {
+        StartCoroutine(LoadWin(delay));
+    }
+
+    public void CargarEscenaDerrota(float delay = 1.5f)
+    {
+        StartCoroutine(LoadLose(delay));
+    }
+
+    private IEnumerator LoadWin(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        if (!string.IsNullOrEmpty(escenaVictoria))
+            SceneManager.LoadScene(escenaVictoria);
+        else
+            Debug.LogError("No asignaste escena de victoria en el GameManager.");
+    }
+
+    private IEnumerator LoadLose(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        if (!string.IsNullOrEmpty(escenaDerrota))
+            SceneManager.LoadScene(escenaDerrota);
+        else
+            Debug.LogError("No asignaste escena de derrota en el GameManager.");
+    }
 
     void Awake()
     {
@@ -45,6 +81,7 @@ public class GameManager : MonoBehaviour
                 EncenderLuzFinal(); // ← prender la luz final
                 MusicManager.Instance.ReproducirVictoria();
                 juegoTerminado = true;
+                CargarEscenaVictoria(0.5f);
             }
         }
         else
@@ -58,6 +95,7 @@ public class GameManager : MonoBehaviour
             {
                 juegoTerminado = true;
                 Debug.Log("💀 Has perdido el nivel.");
+                CargarEscenaDerrota(0.1f);
             }
 
             indiceActual = 0;        // reiniciar orden
@@ -100,4 +138,6 @@ public class GameManager : MonoBehaviour
             luz.SetActive(false);
         }
     }
+
+
 }

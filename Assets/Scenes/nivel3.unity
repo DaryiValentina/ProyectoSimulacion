@@ -1178,6 +1178,8 @@ MonoBehaviour:
   - {fileID: 148214615}
   - {fileID: 1587162400}
   - {fileID: 770958977}
+  escenaVictoria: nivel3_ganaste
+  escenaDerrota: nivel3_perdiste
   juegoTerminado: 0
 --- !u!4 &698247201
 Transform:

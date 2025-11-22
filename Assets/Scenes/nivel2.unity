@@ -1135,6 +1135,8 @@ MonoBehaviour:
   - {fileID: 506026004}
   - {fileID: 922239405}
   - {fileID: 1968046850}
+  escenaVictoria: nivel2_ganaste
+  escenaDerrota: nivel2_perdiste
   juegoTerminado: 0
 --- !u!1 &833339488 stripped
 GameObject:
