@@ -454,7 +454,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -1.6025403, y: 4.65, z: -5.501669}
-  m_LocalScale: {x: 0.007282807, y: 0.007744385, z: 0.01125801}
+  m_LocalScale: {x: 0.012175397, y: 0.012947063, z: 0.01882114}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 618149173}
@@ -961,6 +961,10 @@ MonoBehaviour:
   escenaVictoria: nivel1_ganaste
   escenaDerrota: nivel1_perdiste
   juegoTerminado: 0
+  nivelActual: 1
+  velocidadNivel1: 1
+  velocidadNivel2: 2
+  velocidadNivel3: 2.8
 --- !u!4 &698247201
 Transform:
   m_ObjectHideFlags: 0
@@ -1718,7 +1722,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 12.8, y: 4.42}
+  m_Size: {x: 9.71, y: 3.7}
   m_EdgeRadius: 0
 --- !u!1 &1507964483
 GameObject:
@@ -1931,7 +1935,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.716, y: 4.751, z: -5.501669}
-  m_LocalScale: {x: 0.0059851054, y: 0.0066200444, z: 0.0101752905}
+  m_LocalScale: {x: 0.008312713, y: 0.00919458, z: 0.0141324615}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 618149173}
@@ -2542,7 +2546,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 1.5784597, y: 4.68, z: -5.501669}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 0.7581, y: 0.7581, z: 0.7581}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 618149173}

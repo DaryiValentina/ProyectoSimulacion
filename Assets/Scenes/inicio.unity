@@ -948,9 +948,10 @@ MonoBehaviour:
   musicaNivel2: {fileID: 8300000, guid: 46b2706c44b16f540bfbc69991b73b78, type: 3}
   musicaNivel3: {fileID: 8300000, guid: 58bab90b8bed56442a200ccc5c5141b8, type: 3}
   musicaVictoria: {fileID: 8300000, guid: 72f691b1760cae84c87b451af5b54d39, type: 3}
+  musicaDerrota: {fileID: 8300000, guid: 9127e7fee2622fa49b3fa2bd530c0c97, type: 3}
   defaultVolume: 0.5
   victoryLowerVolume: 0.1
-  victoryFadeTime: 0.5
+  specialFadeTime: 0.5
 --- !u!82 &1701165591
 AudioSource:
   m_ObjectHideFlags: 0

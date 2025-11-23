@@ -85,9 +85,9 @@ public class GameManager : MonoBehaviour
 
             if (indiceActual >= ordenCorrecto.Count)
             {
+                MusicManager.Instance.ReproducirVictoria();
                 Debug.Log("🎉 ¡Comida completada!");
                 EncenderLuzFinal(); // ← prender la luz final
-                MusicManager.Instance.ReproducirVictoria();
                 juegoTerminado = true;
                 CargarEscenaVictoria(0.5f);
             }
@@ -101,9 +101,10 @@ public class GameManager : MonoBehaviour
 
             if (vidas <= 0)
             {
+                MusicManager.Instance.ReproducirDerrota();
                 juegoTerminado = true;
                 Debug.Log("💀 Has perdido el nivel.");
-                CargarEscenaDerrota(0.1f);
+                CargarEscenaDerrota(2f);
             }
 
             indiceActual = 0;        // reiniciar orden

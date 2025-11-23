@@ -7,28 +7,25 @@ public class MusicManager : MonoBehaviour
     public static MusicManager Instance;
 
     [Header("Música por nivel")]
-    public AudioClip musicaMenu;    // Música por defecto
+    public AudioClip musicaMenu;
     public AudioClip musicaNivel1;
     public AudioClip musicaNivel2;
     public AudioClip musicaNivel3;
 
     [Header("Música especial")]
     public AudioClip musicaVictoria;
+    public AudioClip musicaDerrota;
 
     [Header("Ajustes de volumen y fades")]
-    [Tooltip("Volumen objetivo para las pistas normales (0..1)")]
     public float defaultVolume = 0.5f;
-
-    [Tooltip("Volumen al que se baja la música de fondo durante la victoria")]
     public float victoryLowerVolume = 0.1f;
+    public float specialFadeTime = 0.5f;
 
-    [Tooltip("Tiempo de fade (segundos) para atenuar/restaurar")]
-    public float victoryFadeTime = 0.5f;
+    private AudioSource audioMusicaNormal;
+    private AudioSource audioSpecial;
 
-    private AudioSource audioMusicaNormal; // Música base (usa TransicionMusical)
-    private AudioSource audioVictory;      // Música de victoria (reproduce encima)
     private Coroutine transitionRoutine;
-    private Coroutine victoryRoutine;
+    private Coroutine specialRoutine;
 
     void Awake()
     {
@@ -43,25 +40,23 @@ public class MusicManager : MonoBehaviour
             return;
         }
 
-        // Obtener (o crear) dos AudioSources: el primero para la música normal, el segundo para victoria
+        // AUDIO SOURCES
         AudioSource[] sources = GetComponents<AudioSource>();
         if (sources.Length >= 2)
         {
             audioMusicaNormal = sources[0];
-            audioVictory = sources[1];
+            audioSpecial = sources[1];
         }
         else
         {
-            // Si solo hay uno o ninguno, crear los que faltan
             audioMusicaNormal = gameObject.AddComponent<AudioSource>();
-            audioVictory = gameObject.AddComponent<AudioSource>();
+            audioSpecial = gameObject.AddComponent<AudioSource>();
         }
 
         audioMusicaNormal.loop = true;
-        audioVictory.loop = false;
-        audioVictory.playOnAwake = false;
+        audioSpecial.loop = false;
+        audioSpecial.playOnAwake = false;
 
-        // Inicial volumen
         audioMusicaNormal.volume = defaultVolume;
 
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -72,51 +67,39 @@ public class MusicManager : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
+
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         CambiarMusicaSegunEscena(scene.name);
     }
 
+
     public void CambiarMusicaSegunEscena(string nombreEscena)
     {
-        AudioClip nuevaMusica = musicaMenu;  // música predeterminada
+        AudioClip nuevaMusica = musicaMenu;
 
         switch (nombreEscena)
         {
-            case "nivel1":
-                nuevaMusica = musicaNivel1;
-                break;
-
-            case "nivel2":
-                nuevaMusica = musicaNivel2;
-                break;
-
-            case "nivel3":
-                nuevaMusica = musicaNivel3;
-                break;
-
-            default:
-                nuevaMusica = musicaMenu;
-                break;
+            case "nivel1": nuevaMusica = musicaNivel1; break;
+            case "nivel2": nuevaMusica = musicaNivel2; break;
+            case "nivel3": nuevaMusica = musicaNivel3; break;
+            default: nuevaMusica = musicaMenu; break;
         }
 
-        // Si la nueva pista es distinta, lanza la transición (fade out / change clip / fade in)
         if (nuevaMusica != null && audioMusicaNormal.clip != nuevaMusica)
         {
-            // Si hay una transición en curso, deténla (para evitar mezclas raras)
             if (transitionRoutine != null) StopCoroutine(transitionRoutine);
             transitionRoutine = StartCoroutine(TransicionMusical(nuevaMusica));
         }
     }
 
-    // Transición entre pistas normales (tu implementación original, adaptada para usar defaultVolume)
+
     private IEnumerator TransicionMusical(AudioClip nuevaMusica)
     {
-        float tiempoFade = 2f;              // << AJUSTA LA VELOCIDAD AQUÍ si quieres
-        float volumenObjetivo = defaultVolume;
+        float tiempoFade = 2f;
         float volumenInicial = audioMusicaNormal.volume;
 
-        // Si no había clip antes, solo fade in
+        // Si no hay clip actualmente → solo fade in
         if (audioMusicaNormal.clip == null)
         {
             audioMusicaNormal.clip = nuevaMusica;
@@ -125,11 +108,11 @@ public class MusicManager : MonoBehaviour
 
             for (float t = 0; t < tiempoFade; t += Time.deltaTime)
             {
-                audioMusicaNormal.volume = Mathf.Lerp(0f, volumenObjetivo, t / tiempoFade);
+                audioMusicaNormal.volume = Mathf.Lerp(0f, defaultVolume, t / tiempoFade);
                 yield return null;
             }
 
-            audioMusicaNormal.volume = volumenObjetivo;
+            audioMusicaNormal.volume = defaultVolume;
             transitionRoutine = null;
             yield break;
         }
@@ -148,63 +131,65 @@ public class MusicManager : MonoBehaviour
         // FADE IN
         for (float t = 0; t < tiempoFade; t += Time.deltaTime)
         {
-            audioMusicaNormal.volume = Mathf.Lerp(0f, volumenObjetivo, t / tiempoFade);
+            audioMusicaNormal.volume = Mathf.Lerp(0f, defaultVolume, t / tiempoFade);
             yield return null;
         }
 
-        audioMusicaNormal.volume = volumenObjetivo;
+        audioMusicaNormal.volume = defaultVolume;
         transitionRoutine = null;
     }
 
-    // ----------------- VICTORY BEHAVIOR -----------------
+    // ----------------- MÚSICA ESPECIAL -----------------
 
-    // Llamar esto cuando ganas
     public void ReproducirVictoria()
     {
-        if (musicaVictoria == null)
-        {
-            Debug.LogWarning("MusicManager: musicaVictoria no asignada.");
-            return;
-        }
+        if (musicaVictoria == null) return;
 
-        // Si ya se está reproduciendo una victoria, no lanzamos otra
-        if (victoryRoutine != null) return;
-
-        victoryRoutine = StartCoroutine(HandleVictory());
+        if (specialRoutine != null) return;
+        specialRoutine = StartCoroutine(HandleSpecialMusic(musicaVictoria));
     }
 
-    private IEnumerator HandleVictory()
+    public void ReproducirDerrota()
     {
-        // Si hay una transición de pista normal en curso, esperamos a que termine para no pelear con el volumen
+        if (musicaDerrota == null) return;
+
+        if (specialRoutine != null) return;
+        specialRoutine = StartCoroutine(HandleSpecialMusic(musicaDerrota));
+    }
+
+
+    private IEnumerator HandleSpecialMusic(AudioClip clipEspecial)
+    {
         if (transitionRoutine != null) yield return transitionRoutine;
 
         float volumenAntes = audioMusicaNormal.volume;
-        float tiempo = victoryFadeTime;
 
-        // Fade a volumen bajo (victoryLowerVolume), sin detener la música de fondo
-        for (float t = 0; t < tiempo; t += Time.deltaTime)
+        // BAJAR VOLUMEN MÚSICA DE FONDO
+        for (float t = 0; t < specialFadeTime; t += Time.deltaTime)
         {
-            audioMusicaNormal.volume = Mathf.Lerp(volumenAntes, victoryLowerVolume, t / tiempo);
+            audioMusicaNormal.volume = Mathf.Lerp(volumenAntes, victoryLowerVolume, t / specialFadeTime);
             yield return null;
         }
         audioMusicaNormal.volume = victoryLowerVolume;
 
-        // Reproducir la pista de victoria en el audioVictory
-        audioVictory.clip = musicaVictoria;
-        audioVictory.volume = 1f;
-        audioVictory.Play();
+        // REPRODUCIR AUDIO ESPECIAL
+        audioSpecial.Stop();
+        audioSpecial.clip = clipEspecial;
+        audioSpecial.volume = 1f;
+        audioSpecial.Play();
 
-        // Esperamos a que termine la música de victoria (o su duración real)
-        yield return new WaitForSeconds(audioVictory.clip.length);
+        // 🔥 CORREGIDO: AudioClip NO tiene .clip.length
+        yield return new WaitForSeconds(clipEspecial.length);
 
-        // Restaurar volumen de la música normal
-        for (float t = 0; t < tiempo; t += Time.deltaTime)
+        // SUBIR DE NUEVO VOLUMEN DE FONDO
+        for (float t = 0; t < specialFadeTime; t += Time.deltaTime)
         {
-            audioMusicaNormal.volume = Mathf.Lerp(victoryLowerVolume, volumenAntes, t / tiempo);
+            audioMusicaNormal.volume = Mathf.Lerp(victoryLowerVolume, volumenAntes, t / specialFadeTime);
             yield return null;
         }
+
         audioMusicaNormal.volume = volumenAntes;
 
-        victoryRoutine = null;
+        specialRoutine = null;
     }
 }
