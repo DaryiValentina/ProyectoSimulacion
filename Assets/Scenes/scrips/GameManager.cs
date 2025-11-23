@@ -23,6 +23,14 @@ public class GameManager : MonoBehaviour
 
     [HideInInspector] public bool juegoTerminado = false;
 
+    [Header("Nivel actual (1, 2 o 3)")]
+    public int nivelActual = 1;
+
+    [Header("Multiplicadores de velocidad por nivel")]
+    public float velocidadNivel1 = 1f;
+    public float velocidadNivel2 = 2f;
+    public float velocidadNivel3 = 2.8f;
+
     private int indiceActual = 0;
 
     public void CargarEscenaVictoria(float delay = 1.5f)
@@ -139,5 +147,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    //-----------DIFICULTAD-----------------
+    public float GetMultiplicadorVelocidad()
+    {
+        switch (nivelActual)
+        {
+            case 2: return velocidadNivel2;
+            case 3: return velocidadNivel3;
+            default: return velocidadNivel1;
+        }
+    }
 
 }

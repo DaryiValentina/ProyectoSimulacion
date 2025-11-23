@@ -373,6 +373,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gravedad: -9.8
   velocidad: {x: 0, y: 0}
+  dragAire: 0.2
+  amplitudOscilacion: 0.5
+  frecuenciaOscilacion: 2
+  velocidadRotacion: 45
   coeficienteRestitucion: 0.6
   friccionTangencial: 0.15
   radioColision: 0.35
@@ -1180,6 +1184,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gravedad: -9.8
   velocidad: {x: 0, y: 0}
+  dragAire: 0.2
+  amplitudOscilacion: 0.5
+  frecuenciaOscilacion: 2
+  velocidadRotacion: 45
   coeficienteRestitucion: 0.6
   friccionTangencial: 0.15
   radioColision: 0.35
@@ -1381,6 +1389,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gravedad: -9.8
   velocidad: {x: 0, y: 0}
+  dragAire: 0.2
+  amplitudOscilacion: 0.5
+  frecuenciaOscilacion: 2
+  velocidadRotacion: 45
   coeficienteRestitucion: 0.6
   friccionTangencial: 0.15
   radioColision: 0.35
@@ -1838,6 +1850,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gravedad: -9.8
   velocidad: {x: 0, y: 0}
+  dragAire: 0.2
+  amplitudOscilacion: 0.5
+  frecuenciaOscilacion: 2
+  velocidadRotacion: 45
   coeficienteRestitucion: 0.6
   friccionTangencial: 0.15
   radioColision: 0.35
@@ -1916,7 +1932,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.716, y: 4.751, z: -5.501669}
   m_LocalScale: {x: 0.0059851054, y: 0.0066200444, z: 0.0101752905}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 618149173}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2445,6 +2461,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gravedad: -9.8
   velocidad: {x: 0, y: 0}
+  dragAire: 0.2
+  amplitudOscilacion: 0.5
+  frecuenciaOscilacion: 2
+  velocidadRotacion: 45
   coeficienteRestitucion: 0.6
   friccionTangencial: 0.15
   radioColision: 0.35
@@ -2522,8 +2542,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 1.5784597, y: 4.68, z: -5.501669}
-  m_LocalScale: {x: 0.39189, y: 0.39189, z: 0.39189}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 618149173}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
